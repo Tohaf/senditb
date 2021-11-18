@@ -32,6 +32,10 @@ const db = mongoose.connection;
 db.on('error', error => console.error(error));
 db.once('open', () => console.log('connected to Mongoose'));  
 
+router.get('/', (req, res)=>{
+    res.send('wellcome');
+})
+
 
 
 
