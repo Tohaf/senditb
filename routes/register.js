@@ -4,66 +4,71 @@ let router = express.Router();
 const register = require('../model/register');
 
 
+router.get('/pass', (req, res) => {
+    res.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
+    res.send('register', { register: new register() });
+});
 
 
+router.post('/pass', async (req, res) => {
+    res.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
+    res.setHeader("Access-Control-Expose-Headers", "Content-Type, application/json;charset=utf-8");
 
+    try {
 
+        var newRegister = await new register({
+            Firstname : req.body.Firstname,
+            Lastname : req.body.Lastname,
+            password : req.body.password,
+            email : req.body.email,
+            username : req.body.username
 
+        });
 
-router.post('/pass', async(req, res) => {
+        await newRegister.save();
 
-    var Firstname = req.body.Firstname;
-    var Lastname = req.body.Lastname;
-    var password = req.body.password;
-    var email = req.body.email;
-    var username = req.body.username;
+        res.status(200).send(newRegister);
 
-    var newRegister = new register();
+    } catch (err) {
+        console.log(err);
+        res.status(500).send();
 
-    newRegister.Firstname = Firstname;
-    newRegister.Lastname = Lastname;
-    newRegister.password = password;
-    newRegister.email = email;
-    newRegister.username = username;
-
-    newRegister.save((err, saveRegister)=>{
-        if(err){
-            
-            res.status(500).send();
-        }
-
-        res.status(200).send(saveRegister);
-    });
+    }
 
 });
 
 
+router.get('/login', (req, res) => {
+    res.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
+    res.send(register);
+});
 
 router.post('/login', (req, res) => {
     res.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
+    res.setHeader("Access-Control-Expose-Headers", "Content-Type, application/json;charset=utf-8");
     var password = req.body.password;
-    var email = req.body.email;
+    var username = req.body.username;
 
-    register.findOne({email: email, password: password}, (err, register) => {
-        if(err){
+    register.findOne({ username: username, password: password }, (err, register) => {
+        if (err) {
             console.log(err);
             return res.status(500).send('not a success');
-            
-        }
-        if(!register){
 
-            return res.status(404).send();
+        } else if (!register) {
+
+            return res.status(404).send('unsuccesful');
         }
 
-        res.send('succesful');
+        return res.status(200).send(register);
+
     });
 
-
-    
 });
 
 
 
-module.exports= router;
+
+
+module.exports = router;
 
 
