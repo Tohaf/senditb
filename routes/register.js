@@ -5,13 +5,13 @@ const register = require('../model/register');
 
 
 router.get('/pass', (req, res) => {
-    res.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
+    res.setHeader("Access-Control-Allow-Origin", " https://tohaf.github.io");
     res.send('register', { register: new register() });
 });
 
 
 router.post('/pass', async (req, res) => {
-    res.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
+    res.setHeader("Access-Control-Allow-Origin", " https://tohaf.github.io");
     res.setHeader("Access-Control-Expose-Headers", "Content-Type, application/json;charset=utf-8");
 
     try {
@@ -39,12 +39,12 @@ router.post('/pass', async (req, res) => {
 
 
 router.get('/login', (req, res) => {
-    res.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
+    res.setHeader("Access-Control-Allow-Origin", " https://tohaf.github.io");
     res.send(register);
 });
 
 router.post('/login', (req, res) => {
-    res.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
+    res.setHeader("Access-Control-Allow-Origin", " https://tohaf.github.io");
     res.setHeader("Access-Control-Expose-Headers", "Content-Type, application/json;charset=utf-8");
     var password = req.body.password;
     var username = req.body.username;
