@@ -25,6 +25,7 @@ app.use(express.text({type: 'application/json'}));
 app.use(cors());
 app.use(methodOverride('_method'));
 
+
 const mongoose = require('mongoose');
 mongoose.connect(process.env.DATABASE_URL, {
 useNewUrlParser: true, useUnifiedTopology: true});
