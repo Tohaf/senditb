@@ -3,12 +3,13 @@ const mongoose = require ('mongoose');
 const adminSchema = new mongoose.Schema({
     username:{
         type: String,
-        required: true
-
+        required: true,
+        unique: true
     },
     password:{
         type: String,
-        required: false
+        required: true,
+        unique: true
         
     }
 });
