@@ -1,18 +1,39 @@
 const mongoose = require ('mongoose');
 
 const adminSchema = new mongoose.Schema({
-    username:{
+    
+    nama:{
         type: String,
-        required: true,
-        unique: true
+        required:true
+
+    },
+    namo:{
+        type: String,
+        required:true
+    
+    },
+    email:{
+        type: String,
+        required:true
+
+        
     },
     password:{
         type: String,
-        required: true,
-        unique: true
+        required:true
         
+    },
+    confirmPassword:{
+        type: String
+        
+    },
+    token:{
+        type:String
     }
+   
 });
+
+adminSchema.index({email: 1}, {unique: true});
 
 
 module.exports = mongoose.model('admin', adminSchema);

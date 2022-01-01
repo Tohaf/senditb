@@ -2,11 +2,13 @@ let express = require('express');
 let router = express.Router();
 const mongoose = require('mongoose');
 const parcel = require('../model/parcel');
-
-
+const jwt = require('jsonwebtoken');
+const auth = require('../middleware/auth');
+const JWT_SECRET = 'd8cd5cd30af19bcf07b59d5661a0690db51d5c95167a94d60e286d38ac05907fa';
+const config = process.env.TOKEN_KEY;
 
 router.get('/getall', async (req, res) => {
-    res.setHeader("Access-Control-Allow-Origin", "https://tohaf.github.io");
+    res.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
 
     try {
         const parcels = await parcel.find();
@@ -21,7 +23,7 @@ router.get('/getall', async (req, res) => {
 
 
 router.get('/:id/search', async (req, res) => {
-    res.setHeader("Access-Control-Allow-Origin", "https://tohaf.github.io");
+    res.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
 
     let searchOptions = {};
 
@@ -43,33 +45,56 @@ router.get('/:id/search', async (req, res) => {
 
 
 
-router.get('/', (req, res)=> {
+router.get('/', (req, res) => {
     res.setHeader("Access-Control-Allow-Origin", "https://tohaf.github.io");
-    res.send('parcel', {parcel: new parcel()});
+    res.send('parcel', { parcel: new parcel() });
 });
 
 
 
 
-router.post('/',  (req, res) => {
-    res.setHeader("Access-Control-Allow-Origin", "https://tohaf.github.io");
+router.post('/', (req, res) => {
+    res.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
     res.setHeader("Access-Control-Expose-Headers", "Content-Type, application/json;charset=utf-8");
-    var name = req.body.name;
+    /*
+    try {
+        const { name, email, destination, location, status } = req.body;
+
+        var newParcel = new parcel();
+
+        newParcel.destination = destination;
+        newParcel.location = location;
+        newParcel.status = status;
+        newParcel.name = name;
+        newParcel.email = email;
+
+        newParcel.save();
+
+        res.status(200).send(newParcel);
+
+    } catch (err) {
+        console.log(err)
+    }
+    */
+
     var destination = req.body.destination;
-    var password = req.body.password;
-    var email = req.body.email;
     var location = req.body.location;
     var status = req.body.status;
+    var token = req.body.token;
+    const user = jwt.verify(token, JWT_SECRET)
+    var email = user.email;
+    var name = user.name;
 
     var newParcel = new parcel();
-
-    newParcel.name = name;
+    
     newParcel.destination = destination;
-    newParcel.password = password;
-    newParcel.email = email;
     newParcel.location = location;
     newParcel.status = status;
+    newParcel.email = email;
+    newParcel.name = name
 
+    
+    console.log(user);
 
     newParcel.save((err, saveParcel) => {
         if (err) {
@@ -78,6 +103,7 @@ router.post('/',  (req, res) => {
         }
 
         res.status(200).send(saveParcel);
+        
     });
 
 });
@@ -87,7 +113,7 @@ router.post('/',  (req, res) => {
 
 
 router.put('/:id/location', async (req, res) => {
-    res.setHeader("Access-Control-Allow-Origin", "https://tohaf.github.io");
+    res.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type, application/json;charset=utf-8");
     res.setHeader("Access-Control-Allow-Method", "PUT");
 
@@ -98,21 +124,21 @@ router.put('/:id/location', async (req, res) => {
         const myD = req.params.id;
         const location = req.body.location;
 
-        parcels = await parcel.findByIdAndUpdate({"_id":mongoose.Types.ObjectId(myD.trim())},
-         {new: true}).then(parcels => {
-             parcels.location = location;
-             parcels.save();
-             res.send(parcels);
-             
-         });
-        
+        parcels = await parcel.findByIdAndUpdate({ "_id": mongoose.Types.ObjectId(myD.trim()) },
+            { new: true }).then(parcels => {
+                parcels.location = location;
+                parcels.save();
+                res.send(parcels);
+
+            });
+
 
     } catch (err) {
         console.log(err);
 
         if (parcels == null) {
             res.status(400).send('error null')
-        } else{
+        } else {
             res.status(404).send('unsuccesful')
         }
     }
@@ -121,7 +147,7 @@ router.put('/:id/location', async (req, res) => {
 
 
 router.put('/:id/status', async (req, res) => {
-    res.setHeader("Access-Control-Allow-Origin", "https://tohaf.github.io");
+    res.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type, application/json;charset=utf-8");
     res.setHeader("Access-Control-Allow-Method", "PUT");
 
@@ -132,21 +158,21 @@ router.put('/:id/status', async (req, res) => {
         const myD = req.params.id;
         const status = req.body.status;
 
-        parcels = await parcel.findByIdAndUpdate({"_id":mongoose.Types.ObjectId(myD.trim())},
-         {new: true}).then(parcels => {
-             parcels.status = status;
-             parcels.save();
-             res.send(parcels);
-             
-         });
-        
+        parcels = await parcel.findByIdAndUpdate({ "_id": mongoose.Types.ObjectId(myD.trim()) },
+            { new: true }).then(parcels => {
+                parcels.status = status;
+                parcels.save();
+                res.send(parcels);
+
+            });
+
 
     } catch (err) {
         console.log(err);
 
         if (parcels == null) {
             res.status(400).send('error null')
-        } else{
+        } else {
             res.status(404).send('unsuccesful')
         }
     }
@@ -158,7 +184,7 @@ router.put('/:id/status', async (req, res) => {
 
 
 router.put('/:id/destination', async (req, res) => {
-    res.setHeader("Access-Control-Allow-Origin", "https://tohaf.github.io");
+    res.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type, application/json;charset=utf-8");
     res.setHeader("Access-Control-Allow-Method", "PUT");
 
@@ -169,20 +195,20 @@ router.put('/:id/destination', async (req, res) => {
         const id = req.params.id;
         const destination = req.body.destination;
 
-        parcels = await parcel.findByIdAndUpdate({"_id":mongoose.Types.ObjectId(id.trim())},
-         {new: true}).then(parcels => {
-             parcels.destination = destination;
-             parcels.save();
-             res.send(parcels);
-             
-         });
-    
+        parcels = await parcel.findByIdAndUpdate({ "_id": mongoose.Types.ObjectId(id.trim()) },
+            { new: true }).then(parcels => {
+                parcels.destination = destination;
+                parcels.save();
+                res.send(parcels);
+
+            });
+
     } catch (err) {
         console.log(err);
 
         if (parcels == null) {
             res.status(404).send('error nul')
-        } else{
+        } else {
             res.send('unsuccesful')
         }
     }
@@ -194,7 +220,7 @@ router.put('/:id/destination', async (req, res) => {
 
 
 router.delete('/:id/cancel', async (req, res) => {
-    res.setHeader("Access-Control-Allow-Origin", "https://tohaf.github.io");
+    res.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type, application/json;charset=utf-8");
     res.setHeader("Access-Control-Allow-Method", "DELETE");
     let parcels
@@ -202,7 +228,7 @@ router.delete('/:id/cancel', async (req, res) => {
     try {
 
         parcels = await parcel.findById(req.params.id);
-    
+
         await parcels.remove()
         res.send(parcels);
 
@@ -213,20 +239,20 @@ router.delete('/:id/cancel', async (req, res) => {
 });
 
 
-router.get('/:id/cancel', async(req, res)=> {
+router.get('/:id/cancel', async (req, res) => {
 
-    try{ 
+    try {
         const parcels = await parcel.findById(req.params.id);
         parcels.remove();
-        res.status(200).send( 'deleted succefully');
+        res.status(200).send('deleted succefully');
 
-    }catch{
+    } catch {
 
         res.send('not get');
-      
+
     }
 
-   
+
 });
 
 

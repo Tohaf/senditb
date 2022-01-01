@@ -15,26 +15,25 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 
-router.get('/pass', (req, res) => {
+router.get('/', (req, res) => {
     res.setHeader("Access-Control-Allow-Origin", "https://tohaf.github.io");
     res.send('register', { register: new register() });
 });
 
 
 router.post('/pass', async (req, res) => {
-    res.setHeader("Access-Control-Allow-Origin", "https://tohaf.github.io");
+    res.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
     res.setHeader("Access-Control-Expose-Headers", "Content-Type, application/json;charset=utf-8");
 
     try {
-        var firstname = req.body.firstname;
-        var lastname = req.body.lastname;
+        var nama = req.body.nama;
+        var namo = req.body.namo;
         var password = req.body.password;
         var email = req.body.email;
-        var username = req.body.username;
 
-        const doc = await register.findOne({ username });
+        const doc = await register.findOne({ email });
         if (doc != null) {
-            if (doc.username) {
+            if (doc.email) {
                 return res.status(409).json("email already exist. please login");
             }
            
@@ -43,14 +42,13 @@ router.post('/pass', async (req, res) => {
         encryptedPassword = await bcrypt.hash('password', 5);
 
         const Register = await register.create({
-            firstname,
-            lastname,
-            username,
+            nama,
+            namo,
             email,
             password: encryptedPassword,
         });
 
-        res.status(201).json(Register);
+        res.status(201).json(`welcome  + ${email}`);
 
         
     } catch (err) {
@@ -61,13 +59,13 @@ router.post('/pass', async (req, res) => {
 });
 
 
-router.get('/login', (req, res) => {
+router.get('/', (req, res) => {
     res.setHeader("Access-Control-Allow-Origin", "https://tohaf.github.io");
     res.send(register);
 });
 
-router.post('/login', (req, res) => {
-    res.setHeader("Access-Control-Allow-Origin", "https://tohaf.github.io");
+router.post('/', (req, res) => {
+    res.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
     res.setHeader("Access-Control-Expose-Headers", "Content-Type, application/json;charset=utf-8");
     var password = req.body.password;
     var username = req.body.username;
