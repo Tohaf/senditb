@@ -11,7 +11,7 @@ app.use(express.json());
 
 
 router.post('/pass',  async function (req, res, next) {
-    res.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
+    res.setHeader("Access-Control-Allow-Origin", "https://tohaf.github.io");
     res.setHeader("Access-Control-Expose-Headers", "Content-Type, Application/json;charset=utf-8");
     
         const { nama, namo, email, password, confirmPassword } = req.body;
@@ -54,7 +54,7 @@ router.post('/pass',  async function (req, res, next) {
 
 
 router.get('/log', (req, res) => {
-    res.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
+    res.setHeader("Access-Control-Allow-Origin", "https://tohaf.github.io");
     res.send(admin);
 });
 
@@ -91,7 +91,7 @@ router.post('/login', (req, res) => {
 
 
 router.post('/login', async(req, res) => {
-    res.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
+    res.setHeader("Access-Control-Allow-Origin", "https://tohaf.github.io");
     res.setHeader("Access-Control-Expose-Headers", "Content-Type, application/json;charset=utf-8");
 
     var password = req.body.password;

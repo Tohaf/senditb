@@ -8,7 +8,7 @@ const JWT_SECRET = 'd8cd5cd30af19bcf07b59d5661a0690db51d5c95167a94d60e286d38ac05
 const config = process.env.TOKEN_KEY;
 
 router.get('/getall', async (req, res) => {
-    res.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
+    res.setHeader("Access-Control-Allow-Origin", "https://tohaf.github.io");
 
     try {
         const parcels = await parcel.find();
@@ -23,7 +23,7 @@ router.get('/getall', async (req, res) => {
 
 
 router.get('/:id/search', async (req, res) => {
-    res.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
+    res.setHeader("Access-Control-Allow-Origin", "https://tohaf.github.io");
 
     let searchOptions = {};
 
@@ -54,7 +54,7 @@ router.get('/', (req, res) => {
 
 
 router.post('/', (req, res) => {
-    res.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
+    res.setHeader("Access-Control-Allow-Origin", "https://tohaf.github.io");
     res.setHeader("Access-Control-Expose-Headers", "Content-Type, application/json;charset=utf-8");
     /*
     try {
@@ -113,7 +113,7 @@ router.post('/', (req, res) => {
 
 
 router.put('/:id/location', async (req, res) => {
-    res.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
+    res.setHeader("Access-Control-Allow-Origin", "https://tohaf.github.io");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type, application/json;charset=utf-8");
     res.setHeader("Access-Control-Allow-Method", "PUT");
 
@@ -147,7 +147,7 @@ router.put('/:id/location', async (req, res) => {
 
 
 router.put('/:id/status', async (req, res) => {
-    res.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
+    res.setHeader("Access-Control-Allow-Origin", "https://tohaf.github.io");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type, application/json;charset=utf-8");
     res.setHeader("Access-Control-Allow-Method", "PUT");
 
@@ -184,7 +184,7 @@ router.put('/:id/status', async (req, res) => {
 
 
 router.put('/:id/destination', async (req, res) => {
-    res.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
+    res.setHeader("Access-Control-Allow-Origin", "https://tohaf.github.io");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type, application/json;charset=utf-8");
     res.setHeader("Access-Control-Allow-Method", "PUT");
 
@@ -220,7 +220,7 @@ router.put('/:id/destination', async (req, res) => {
 
 
 router.delete('/:id/cancel', async (req, res) => {
-    res.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
+    res.setHeader("Access-Control-Allow-Origin", "https://tohaf.github.io");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type, application/json;charset=utf-8");
     res.setHeader("Access-Control-Allow-Method", "DELETE");
     let parcels
