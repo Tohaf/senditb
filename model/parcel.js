@@ -12,7 +12,6 @@ const parcelSchema = new mongoose.Schema({
     },
     status:{
         type: String
-
     },
     name:{
         type: String

@@ -46,7 +46,7 @@ router.post('/pass',  async function (req, res, next) {
     
         } catch (err) {
             console.log(err);
-            return res.json({status: 'error', error: 'problem tring to register'} );
+            return res.json({status: 'error', error: 'problem trying to register'} );
     
         }
 
@@ -113,7 +113,8 @@ router.post('/login', async(req, res) => {
                 JWT_SECRET
             )
             
-            return res.json(token);
+            return res.json(user.nama);
+            
         }
 
          return res.json({status:'error', error:'invalidemail/password'});

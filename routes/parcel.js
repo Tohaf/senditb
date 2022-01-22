@@ -80,11 +80,15 @@ router.post('/', (req, res) => {
     var destination = req.body.destination;
     var location = req.body.location;
     var status = req.body.status;
+    var name = req.body.name;
+    var email = req.body.email;
+    /*
     var token = req.body.token;
     const user = jwt.verify(token, JWT_SECRET)
     var email = user.email;
     var name = user.name;
-
+    */
+    
     var newParcel = new parcel();
     
     newParcel.destination = destination;
@@ -94,7 +98,7 @@ router.post('/', (req, res) => {
     newParcel.name = name
 
     
-    console.log(user);
+    console.log(newParcel);
 
     newParcel.save((err, saveParcel) => {
         if (err) {

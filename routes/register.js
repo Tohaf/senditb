@@ -22,7 +22,7 @@ router.get('/', (req, res) => {
 
 
 router.post('/pass', async (req, res) => {
-    res.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
+    res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
     res.setHeader("Access-Control-Expose-Headers", "Content-Type, application/json;charset=utf-8");
 
     try {
