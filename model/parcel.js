@@ -19,6 +19,12 @@ const parcelSchema = new mongoose.Schema({
     email:{
         type: String
     },
+    recipient:{
+        type: String
+    },
+    phone:{
+        type: String
+    },
     token: {
         type: String
     }

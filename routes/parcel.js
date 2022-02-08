@@ -82,6 +82,8 @@ router.post('/', (req, res) => {
     var status = req.body.status;
     var name = req.body.name;
     var email = req.body.email;
+    var recipient = req.body.recipient;
+    var phone = req.body.phone;
     /*
     var token = req.body.token;
     const user = jwt.verify(token, JWT_SECRET)
@@ -95,7 +97,9 @@ router.post('/', (req, res) => {
     newParcel.location = location;
     newParcel.status = status;
     newParcel.email = email;
-    newParcel.name = name
+    newParcel.name = name;
+    newParcel.recipient = recipient;
+    newParcel.phone = phone;
 
     
     console.log(newParcel);

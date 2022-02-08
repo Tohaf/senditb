@@ -14,7 +14,7 @@ router.post('/pass',  async function (req, res, next) {
     res.setHeader("Access-Control-Allow-Origin", "https://tohaf.github.io");
     res.setHeader("Access-Control-Expose-Headers", "Content-Type, Application/json;charset=utf-8");
     
-        const { nama, namo, email, password, confirmPassword } = req.body;
+        const { nama, namo, email, password,phone,address, confirmPassword } = req.body;
         if(password != confirmPassword){
             return res.status(404).json(' and confirm password are not the same');
         }
@@ -38,6 +38,8 @@ router.post('/pass',  async function (req, res, next) {
             const response = await Admin.create({
                 nama,
                 namo,
+                phone,
+                address,
                 email: email.toLowerCase(),
                 password: encryptedPassword
             });
