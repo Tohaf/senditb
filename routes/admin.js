@@ -9,16 +9,66 @@ const config = process.env.TOKEN_KEY;
 app.use(express.json());
 
 
+/**
+ * @swagger
+ * components:
+ *     schemas:
+ *         signup:
+ *             type: object
+ *             properties:
+ *                 nama:
+ *                     type: string
+ *                 namo:
+ *                     type: string
+ *                 phone:
+ *                     type: string
+ *                 address:
+ *                     type: string
+ *                 password:
+ *                     type: string
+ *                 confirmPassword:
+ *                     type: string
+ *                 email:
+ *                     type: string
+ *         login:
+ *             type: object
+ *             properties:
+ *                 email:
+ *                     type: string
+ *                 password:
+ *                     type: string
+ */
 
-router.post('/pass',  async function (req, res, next) {
+
+/**
+ * @swagger
+ * /auth/signup:
+ *  post:
+ *      tags: [Auth]  
+ *      summary: To post parcel delivery order
+ *      description: This is use to post data
+ *      requestBody:
+ *          required: true
+ *          content: 
+ *              application/json:
+ *                  schema:
+ *                      $ref: '#components/schemas/signup'
+ *                      
+ *      responses:
+ *          200:
+ *              description: This is use to add data
+ */
+
+
+router.post('/auth/signup',  async function (req, res, next) {
     res.setHeader("Access-Control-Allow-Origin", "https://tohaf.github.io");
     res.setHeader("Access-Control-Expose-Headers", "Content-Type, Application/json;charset=utf-8");
     
         const { nama, namo, email, password,phone,address, confirmPassword } = req.body;
+
         if(password != confirmPassword){
             return res.status(404).json(' and confirm password are not the same');
         }
-    
         try {
             await Admin.findOne({email}, function(err, doc){
                 if(err){
@@ -91,8 +141,26 @@ router.post('/login', (req, res) => {
 
 */
 
+/**
+ * @swagger
+ * /auth/login:
+ *  post:
+ *      tags: [Auth]  
+ *      summary: To post parcel delivery order
+ *      description: This is use to post data
+ *      requestBody:
+ *          required: true
+ *          content: 
+ *              application/json:
+ *                  schema:
+ *                      $ref: '#components/schemas/login'
+ *                      
+ *      responses:
+ *          200:
+ *              description: This is use to add data
+ */
 
-router.post('/login', async(req, res) => {
+router.post('/auth/login', async(req, res) => {
     res.setHeader("Access-Control-Allow-Origin", "https://tohaf.github.io");
     res.setHeader("Access-Control-Expose-Headers", "Content-Type, application/json;charset=utf-8");
 

@@ -11,7 +11,10 @@ const registerRouter = require('./routes/register');
 const parcelRouter = require('./routes/parcel');
 const adminRouter = require ('./routes/admin');
 const path = require('path');
-const router = express.Router();
+
+const swaggerJSDoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
+
 
 const mongoose = require('mongoose');
 
@@ -22,7 +25,27 @@ db.on('error', error => console.error(error));
 db.once('open', () => console.log('connected to Mongoose'));
 
 
+const options ={
+    definition: {
+        openapi : '3.0.0',
+        info : {
+            title: 'PARCEL DELIVERY API',
+            version: '1.0.0'
+        },
+        servers:[
+            {
+               url: 'http://localhost:5000/api/v1'
+            }
+        ],
 
+    },
+    apis: ['./routes/parcel.js', './routes/admin.js'],
+    customCss: '.swagger-ui .topbar { display: none }'
+};
+
+const swaggerSpec = swaggerJSDoc(options);
+
+app.get("/api-docs/swagger-jsdoc", (req, res) => res.json(swaggerJSDoc));
 
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
@@ -36,17 +59,19 @@ app.use(methodOverride('_method'));
 
 
 
-router.get('/', (req, res)=>{
-    res.send('wellcome');
+
+
+app.get('/', (req, res)=>{
+    res.send(`<h1>parcel delivery API<h1>
+                <a href="/api-docs"> Documentation </a>`);
 })
 
 
-
-app.use('/admin', adminRouter);
-app.use('/parcels/', router);
+app.use('/api/v1', adminRouter);
 app.use('/register', registerRouter);
-app.use('/user/', router);
-app.use('/parcel', parcelRouter);
+
+app.use('/api/v1', parcelRouter);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 
 app.listen(process.env.PORT  || 5000);

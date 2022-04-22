@@ -1,3 +1,80 @@
+router.use('/api-docs', swaggerUi.serve);
+
+router.get('/api-docs', swaggerUi.setup(swaggerJSDoc));
+
+/**
+ * @swagger
+ * /parcels/{id}/search:
+ *  get:
+ *      tags: [Parcels]  
+ *      summary: To get specific parcel delivery order
+ *      description: This is use to fetch data
+ *      explorer: true
+ *      parameters:
+ *          - in: path
+ *            name: id
+ *            required: true
+ *            description: Numerical ID required
+ *            schema:
+ *              type: string
+ *      responses:
+ *          200:
+ *              description: This is use to fetch data
+ *              content: 
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          items:
+ *                              $ref: '#components/schemas/parcelOrder'       
+ */
+
+
+
+/**
+ * @swagger
+ * components:
+ *     schemas:
+ *         Book:
+ *             type: object
+ *             properties:
+ *                 _id:
+ *                     type: integer
+ *                 destination:
+ *                     type: string
+ *                 location:
+ *                     type: string
+ *                 status:
+ *                     type: string
+ *                 email:
+ *                     type: string
+ *                 name:
+ *                     type: string
+ *                 recipient:
+ *                     type: string
+ *                 phone:
+ *                     type: integer
+ */
+
+/**
+ * @swagger
+ * /:
+ * get:
+ *     summary: To get all parcel delivery order
+ *     description: This is use to fetch data
+ *     responses:
+ *         200:
+ *             description: This is use to fetch data
+ *             content: 
+ *                 application/json:
+ *                     schemas:
+ *                         type:array
+ *                         items:
+ *                             $ref: '#components/schemas/Book'
+ */
+
+
+/*
+
 display.innerHTML = `
 <br>
 <div> ${output} </div> 
@@ -115,3 +192,4 @@ res.status(201).json(Register);
 
     console.log(data);
     setLoadtData(parcels);
+    */

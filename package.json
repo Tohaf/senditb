@@ -19,6 +19,8 @@
     "method-override": "^3.0.0",
     "mongoose": "^6.0.8",
     "multer": "^1.4.3",
-    "nodemon": "^2.0.13"
+    "nodemon": "^2.0.13",
+    "swagger-jsdoc": "^6.0.0",
+    "swagger-ui-express": "^4.3.0"
   }
 }
