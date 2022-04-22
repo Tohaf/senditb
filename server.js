@@ -34,7 +34,7 @@ const options ={
         },
         servers:[
             {
-               url: 'http://localhost:5000/api/v1'
+               url: 'https://web-app-senditb.herokuapp.com/api/v1'
             }
         ],
 
