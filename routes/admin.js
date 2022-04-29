@@ -4,9 +4,11 @@ const Admin = require('../model/admin');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const app = express();
+require("dotenv").config();
 const JWT_SECRET = 'd8cd5cd30af19bcf07b59d5661a0690db51d5c95167a94d60e286d38ac05907fa';
 const config = process.env.TOKEN_KEY;
 app.use(express.json());
+
 
 
 /**
@@ -45,8 +47,8 @@ app.use(express.json());
  * /auth/signup:
  *  post:
  *      tags: [Auth]  
- *      summary: To post parcel delivery order
- *      description: This is use to post data
+ *      summary: To signup parcel delivery order
+ *      description: signup data
  *      requestBody:
  *          required: true
  *          content: 
@@ -57,6 +59,8 @@ app.use(express.json());
  *      responses:
  *          200:
  *              description: This is use to add data
+ *          401:
+ *              description: there is problem with signup
  */
 
 
@@ -93,6 +97,16 @@ router.post('/auth/signup',  async function (req, res, next) {
                 email: email.toLowerCase(),
                 password: encryptedPassword
             });
+            const token =  jwt.sign(
+                {
+                    id: response._id,
+                    email: response.email
+                },
+                process.env.TOKEN_KEY,
+            );
+
+            response.token = token;
+
             return res.status(201).json(response);
            
     
@@ -106,7 +120,7 @@ router.post('/auth/signup',  async function (req, res, next) {
 
 
 router.get('/log', (req, res) => {
-    res.setHeader("Access-Control-Allow-Origin", "https://tohaf.github.io");
+    res.setHeader("Access-Control-Allow-Origin", "https://tohaf.github.io")
     res.send(admin);
 });
 
@@ -146,8 +160,8 @@ router.post('/login', (req, res) => {
  * /auth/login:
  *  post:
  *      tags: [Auth]  
- *      summary: To post parcel delivery order
- *      description: This is use to post data
+ *      summary: To login 
+ *      description: This is use to login data
  *      requestBody:
  *          required: true
  *          content: 
@@ -157,7 +171,9 @@ router.post('/login', (req, res) => {
  *                      
  *      responses:
  *          200:
- *              description: This is use to add data
+ *              description: This is use to login data
+ *          401:
+ *              description: there is problem with login
  */
 
 router.post('/auth/login', async(req, res) => {
@@ -177,14 +193,14 @@ router.post('/auth/login', async(req, res) => {
             const token =  jwt.sign(
                 {
                     id: user._id,
-                    email: user.email,
-                    name:user.nama
+                    email: user.email
                 },
-                JWT_SECRET
-            )
+                process.env.TOKEN_KEY,
+            );
+
+            user.token = token;
             
-            return res.json(user.nama);
-            
+            return res.json(user);
         }
 
          return res.json({status:'error', error:'invalidemail/password'});

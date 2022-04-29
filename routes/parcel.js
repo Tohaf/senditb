@@ -1,10 +1,13 @@
 let express = require('express');
+const app = express();
+app.use(express.json());
 let router = express.Router();
 const mongoose = require('mongoose');
 const parcel = require('../model/parcel');
+
 const jwt = require('jsonwebtoken');
-const auth = require('../middleware/auth');
-const JWT_SECRET = 'd8cd5cd30af19bcf07b59d5661a0690db51d5c95167a94d60e286d38ac05907fa';
+const auth = require('./auth');
+require("dotenv").config();
 const config = process.env.TOKEN_KEY;
 const swaggerJSDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
@@ -13,6 +16,11 @@ const swaggerUi = require('swagger-ui-express');
 /**
  * @swagger
  * components:
+ *     securitySchemes:
+ *       bearerAuth:
+ *         type: http
+ *         scheme: bearer
+ *         bearerFormat: JWT
  *     schemas:
  *         parcelOrder:
  *             type: object
@@ -54,11 +62,15 @@ const swaggerUi = require('swagger-ui-express');
  * @swagger
  * /parcels:
  *  get:
+ *      security:
+ *        - bearerAuth: []
  *      tags: [Parcels]  
  *      summary: To get all parcel delivery order
  *      description: This is use to fetch data
  *      explorer: true
  *      responses:
+ *          UnauthorizedError:
+ *            description: access token not available 
  *          200:
  *              description: This is use to fetch data
  *              content: 
@@ -70,7 +82,7 @@ const swaggerUi = require('swagger-ui-express');
  */
 
 
-router.get('/parcels', async (req, res) => {
+router.get('/parcels', auth, async (req, res) => {
     res.setHeader("Access-Control-Allow-Origin", "https://tohaf.github.io");
 
     try {
@@ -85,7 +97,35 @@ router.get('/parcels', async (req, res) => {
 });
 
 
-router.get('/parcels/:id/search', async (req, res) => {
+/**
+ * @swagger
+ * /parcels/{id}/search:
+ *  get:
+ *      tags: [Parcels]  
+ *      summary: To get specific parcel delivery order
+ *      description: This is use to fetch specific data
+ *      explorer: true
+ *      security:
+ *        - bearerAuth: []
+ *      parameters:
+ *          - in: path
+ *            name: id
+ *            required: true
+ *            description: Numerical ID required
+ *            schema:
+ *              type: string
+ *      responses:
+ *          200:
+ *              description: This is use to fetch specific data
+ *              content: 
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          items:
+ *                              $ref: '#components/schemas/parcelOrder'       
+ */
+
+router.get('/parcels/:id/search',auth, async (req, res) => {
     res.setHeader("Access-Control-Allow-Origin", "https://tohaf.github.io");
 
     let searchOptions = {};
@@ -121,6 +161,8 @@ router.get('/', (req, res) => {
  *      tags: [Parcels]  
  *      summary: To post parcel delivery order
  *      description: This is use to post data
+ *      security:
+ *        - bearerAuth: []
  *      requestBody:
  *          required: true
  *          content: 
@@ -134,7 +176,7 @@ router.get('/', (req, res) => {
  */
 
 
-router.post('/parcels', (req, res) => {
+router.post('/parcels', auth, (req, res) => {
     res.setHeader("Access-Control-Allow-Origin", "https://tohaf.github.io");
     res.setHeader("Access-Control-Expose-Headers", "Content-Type, application/json;charset=utf-8");
     /*
@@ -204,7 +246,9 @@ router.post('/parcels', (req, res) => {
  *  put:
  *      tags: [Parcels]  
  *      summary: To update parcel delivery order
- *      description: This is use to fetch data
+ *      description: This is use to update data
+ *      security:
+ *        - bearerAuth: []
  *      parameters:
  *          - in: path
  *            name: id
@@ -230,7 +274,7 @@ router.post('/parcels', (req, res) => {
  */
 
 
-router.put('/parcels/:id/presentLocation', async (req, res) => {
+router.put('/parcels/:id/presentLocation', auth, async (req, res) => {
     res.setHeader("Access-Control-Allow-Origin", "https://tohaf.github.io");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type, application/json;charset=utf-8");
     res.setHeader("Access-Control-Allow-Method", "PUT");
@@ -270,7 +314,9 @@ router.put('/parcels/:id/presentLocation', async (req, res) => {
  *  put:
  *      tags: [Parcels] 
  *      summary: To update parcel delivery order
- *      description: This is use to fetch data
+ *      description: This is use to update data status
+ *      security:
+ *        - bearerAuth: []
  *      parameters:
  *          - in: path
  *            name: id
@@ -296,7 +342,7 @@ router.put('/parcels/:id/presentLocation', async (req, res) => {
  */
 
 
-router.put('/parcels/:id/status', async (req, res) => {
+router.put('/parcels/:id/status', auth, async (req, res) => {
     res.setHeader("Access-Control-Allow-Origin", "https://tohaf.github.io");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type, application/json;charset=utf-8");
     res.setHeader("Access-Control-Allow-Method", "PUT");
@@ -336,7 +382,9 @@ router.put('/parcels/:id/status', async (req, res) => {
  *  put:
  *      tags: [Parcels] 
  *      summary: To update parcel delivery order
- *      description: This is use to fetch data
+ *      description: This is use to update data destination
+ *      security:
+ *        - bearerAuth: []
  *      parameters:
  *          - in: path
  *            name: id
@@ -363,7 +411,7 @@ router.put('/parcels/:id/status', async (req, res) => {
 
 
 
-router.put('/parcels/:id/destination', async (req, res) => {
+router.put('/parcels/:id/destination', auth, async (req, res) => {
     res.setHeader("Access-Control-Allow-Origin", "https://tohaf.github.io");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type, application/json;charset=utf-8");
     res.setHeader("Access-Control-Allow-Method", "PUT");
@@ -401,9 +449,11 @@ router.put('/parcels/:id/destination', async (req, res) => {
  * /parcels/{id}/cancel:
  *  delete:
  *      tags: [Parcels]   
- *      summary: To get specific parcel delivery order
- *      description: This is use to fetch data
+ *      summary: To delete specific parcel delivery order
+ *      description: This is use to delete data
  *      explorer: true
+ *      security:
+ *        - bearerAuth: []
  *      parameters:
  *          - in: path
  *            name: id
@@ -423,7 +473,7 @@ router.put('/parcels/:id/destination', async (req, res) => {
  */
 
 
-router.delete('/parcels/:id/cancel', async (req, res) => {
+router.delete('/parcels/:id/cancel', auth, async (req, res) => {
     res.setHeader("Access-Control-Allow-Origin", "https://tohaf.github.io");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type, application/json;charset=utf-8");
     res.setHeader("Access-Control-Allow-Method", "DELETE");

@@ -1,17 +1,18 @@
 const jwt = require('jsonwebtoken');
-JWT_SECRET = 'd8cd5cd30af19bcf07b59d5661a0690db51d5c95167a94d60e286d38ac05907fa';
 
-
-
+/*
+const token = require('../routes/parcel');
+*/
 
 const verifyToken = (req, res, next) => {
+
     const token = req.body.token || req.query.token || req.headers["x-access-token"];
 
     if(!token){
         return res.status(403).send("A token is required for authentication");
     }
     try{
-        const decoded = jwt.verify(token, JWT_SECRET);
+        const decoded = jwt.verify(token1, JWT_SECRET);
         req.admin = decoded;
 
     }catch(err){
