@@ -99,9 +99,47 @@ router.get('/parcels', auth, async (req, res) => {
 
 /**
  * @swagger
- * /parcels/{id}/search:
+ * /parcels/{id}:
  *  get:
+ *      security:
+ *        - bearerAuth: []
  *      tags: [Parcels]  
+ *      summary: To get a specific parcel delivery order
+ *      description: This is use to fetch data
+ *      explorer: true
+ *      responses:
+ *          UnauthorizedError:
+ *            description: access token not available 
+ *          200:
+ *              description: This is use to fetch data
+ *              content: 
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          items:
+ *                              $ref: '#components/schemas/parcelOrder'       
+ */
+
+router.get('/parcels/:id', auth, async (req, res) => {
+    res.setHeader("Access-Control-Allow-Origin", "https://tohaf.github.io");
+
+    try {
+        const parcels = await parcel.find({ "_id": mongoose.Types.ObjectId(req.params.id.trim()) });
+        res.status(200).send(parcels);
+
+    } catch {
+        res.status(404).send('unsuccesful');
+
+    }
+
+});
+
+
+/**
+ * @swagger
+ * /users/{id}/parcels:
+ *  get:
+ *      tags: [users]  
  *      summary: To get specific parcel delivery order
  *      description: This is use to fetch specific data
  *      explorer: true
@@ -125,7 +163,7 @@ router.get('/parcels', auth, async (req, res) => {
  *                              $ref: '#components/schemas/parcelOrder'       
  */
 
-router.get('/parcels/:id/search',auth, async (req, res) => {
+router.get('/users/:id/parcels',auth, async (req, res) => {
     res.setHeader("Access-Control-Allow-Origin", "https://tohaf.github.io");
 
     let searchOptions = {};
@@ -374,6 +412,7 @@ router.put('/parcels/:id/status', auth, async (req, res) => {
     }
 
 });
+
 
 
 /**
